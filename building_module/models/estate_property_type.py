@@ -11,5 +11,5 @@ class EstatePropertyType(models.Model):
     @api.constrains('name')
     def _check_name_type(self):
         for rec in self:
-            if rec.name:
-                raise ValidationError('Name Type must be unique')
+            if rec.search_count([('name', '=', rec.name)]) > 1:
+                raise ValidationError("This property type already exists")

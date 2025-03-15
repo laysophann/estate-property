@@ -11,5 +11,5 @@ class EstatePropertyTag(models.Model):
     @api.constrains('name')
     def _check_name_tag(self):
         for rec in self:
-            if rec.name:
-                raise ValidationError('Name Tag must be unique')
+            if rec.search_count([('name', '=', rec.name)]) > 1:
+                raise ValidationError("This property tag already exists")

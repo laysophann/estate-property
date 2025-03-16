@@ -1,5 +1,6 @@
 from datetime import timedelta
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class EstatePropertyOffer(models.Model):
@@ -34,15 +35,19 @@ class EstatePropertyOffer(models.Model):
                 rec.validity = 0
 
     def action_button_accept(self):
-        print('action_button_accept')
         for rec in self:
             rec.status = 'accepted'
             rec.property_id.selling_price = rec.price
             rec.property_id.buyer_id = rec.partner_id
 
     def action_button_refuse(self):
-        print('action_button_refuse')
         for rec in self:
             rec.status = 'refused'
             rec.property_id.selling_price = 0
             rec.property_id.buyer_id = False
+
+    @api.constrains('price')
+    def _check_price(self):
+        for rec in self:
+            if rec.price < 0:
+                raise ValidationError("Price must be positive.")

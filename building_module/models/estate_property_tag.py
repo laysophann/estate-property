@@ -12,4 +12,4 @@ class EstatePropertyTag(models.Model):
     def _check_name_tag(self):
         for rec in self:
             if rec.search_count([('name', '=', rec.name)]) > 1:
-                raise ValidationError("This property tag already exists")
+                raise ValidationError(f"{rec.name} already exists.")

@@ -1,5 +1,3 @@
-from Tools.scripts.dutree import store
-
 from odoo import models, fields, api, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError, ValidationError
@@ -27,7 +25,6 @@ class EstateProperty(models.Model):
          ('east', 'East'),
          ('west', 'West')]
     )
-    active = fields.Boolean()
     state = fields.Selection(
         [('new', 'New'),
          ('offer_received', 'Offer Received'),
@@ -82,8 +79,8 @@ class EstateProperty(models.Model):
             rec.state = 'sold'
         return True
 
-    # @api.constrains('expected_price')
-    # def _check_expected_price(self):
-    #     for rec in self:
-    #         if rec.expected_price <= 0:
-    #             raise ValidationError(_("The expected price must be strictly positive."))
+    @api.constrains('expected_price')
+    def _check_expected_price(self):
+        for rec in self:
+            if rec.expected_price <= 0:
+                raise ValidationError(_("The expected price must be strictly positive."))
